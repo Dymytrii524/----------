@@ -1,0 +1,41 @@
+@model GuestBook.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Реєстрація";
+}
+<h2>Реєстрація</h2>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <td>Логін:</td>
+            <td>@Html.TextBoxFor(m => m.Name)</td>
+            <td>
+                @Html.ValidationMessageFor(m => m.Name,
+                         "", new { style = "color:red" })
+            </td>
+        </tr>
+        <tr>
+            <td>Пароль:</td>
+            <td>@Html.PasswordFor(m => m.Pwd)</td>
+            <td>
+                @Html.ValidationMessageFor(m => m.Pwd,
+                         "", new { style = "color:red" })
+            </td>
+        </tr>
+        <tr>
+            <td>Підтвердження:</td>
+            <td>@Html.PasswordFor(m => m.PwdConfirm)</td>
+            <td>
+                @Html.ValidationMessageFor(m => m.PwdConfirm,
+                         "", new { style = "color:red" })
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button type="submit">Зареєструватись</button>
+                <a href="/Account/Login">Вже маю акаунт</a>
+            </td>
+        </tr>
+    </table>
+</form>

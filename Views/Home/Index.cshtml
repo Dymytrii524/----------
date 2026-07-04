@@ -1,0 +1,101 @@
+@{
+    ViewBag.Title = "Гостева книга";
+}
+
+<h2>Гостева книга</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        Ви: <b>@User.Identity.Name</b>
+        <a href="/Account/Logout">Вихід</a>
+    </p>
+    <div id="error-msg" style="color:red; display:none;"></div>
+    <form id="messageForm">
+        @Html.AntiForgeryToken()
+        <textarea id="messageText" name="messageText" rows="4" cols="60"
+                  placeholder="Ваше повідомлення..."></textarea>
+        <br /><button type="submit">Додати повідомлення</button>
+    </form>
+}
+else
+{
+    <div>
+        <a href="/Account/Login">Вхід в систему</a>
+        |
+        <a href="/Account/Register">Реєстрація</a>
+    </div>
+}
+
+<hr />
+<div id="messages-container"><p>Завантаження...</p></div>
+
+@section Scripts {
+<script>
+    function esc(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    function renderMessages(messages) {
+        var c = document.getElementById('messages-container');
+        if (!messages.length) {
+            c.innerHTML = '<p>Повідомлень ще немає.</p>';
+            return;
+        }
+        c.innerHTML = messages.map(function (m) {
+            return '<table border="1" cellpadding="6" style="margin-bottom:10px;width:600px;">' +
+                '<tr><td><b>' + esc(m.userName) + '</b></td><td>' + esc(m.date) + '</td></tr>' +
+                '<tr><td colspan="2">' + esc(m.text) + '</td></tr>' +
+                '</table>';
+        }).join('');
+    }
+
+    function loadMessages() {
+        fetch('/Home/GetMessages')
+            .then(function (r) { return r.json(); })
+            .then(renderMessages)
+            .catch(function () {
+                document.getElementById('messages-container').innerHTML =
+                    '<p style="color:red">Помилка завантаження повідомлень.</p>';
+            });
+    }
+
+    loadMessages();
+
+    var form = document.getElementById('messageForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var errDiv = document.getElementById('error-msg');
+            errDiv.style.display = 'none';
+
+            var text  = document.getElementById('messageText').value;
+            var token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            fetch('/Home/AddMessage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'messageText=' + encodeURIComponent(text) +
+                      '&__RequestVerificationToken=' + encodeURIComponent(token)
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    document.getElementById('messageText').value = '';
+                    loadMessages();
+                } else {
+                    errDiv.textContent = data.error;
+                    errDiv.style.display = '';
+                }
+            })
+            .catch(function () {
+                errDiv.textContent = 'Помилка при відправці повідомлення.';
+                errDiv.style.display = '';
+            });
+        });
+    }
+</script>
+}
