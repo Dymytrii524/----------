@@ -1,0 +1,85 @@
+@page
+@model GuestBook.Pages.IndexModel
+@{
+    ViewData["Title"] = "Гостева книга";
+}
+
+<h2 class="mb-4">Гостева книга</h2>
+
+@if (User.Identity!.IsAuthenticated)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            Залишити повідомлення як <strong>@User.Identity.Name</strong>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="MessageText" class="form-label">Ваше повідомлення</label>
+                    <textarea asp-for="MessageText"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Введіть повідомлення..."></textarea>
+                    <span asp-validation-for="MessageText" class="validation-error"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Додати повідомлення</button>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <a asp-page="/Account/Login" class="alert-link">Увійдіть</a>
+        або
+        <a asp-page="/Account/Register" class="alert-link">зареєструйтесь</a>,
+        щоб залишити повідомлення.
+    </div>
+}
+
+<hr />
+<h4>Повідомлення</h4>
+<div id="messages-container">
+    <p class="text-muted">Завантаження...</p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function esc(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function renderMessages(messages) {
+            var c = document.getElementById('messages-container');
+            if (!messages.length) {
+                c.innerHTML = '<p class="text-muted">Повідомлень ще немає.</p>';
+                return;
+            }
+            c.innerHTML = messages.map(function (m) {
+                return '<div class="card mb-3">' +
+                    '<div class="card-header d-flex justify-content-between">' +
+                    '<strong>' + esc(m.userName) + '</strong>' +
+                    '<span class="text-muted small">' + esc(m.date) + '</span>' +
+                    '</div>' +
+                    '<div class="card-body">' + esc(m.text) + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function loadMessages() {
+            fetch('/?handler=Messages')
+                .then(function (r) { return r.json(); })
+                .then(renderMessages)
+                .catch(function () {
+                    document.getElementById('messages-container').innerHTML =
+                        '<p class="text-danger">Помилка завантаження повідомлень.</p>';
+                });
+        }
+
+        loadMessages();
+    </script>
+}

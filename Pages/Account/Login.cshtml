@@ -1,0 +1,41 @@
+@page
+@model GuestBook.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Вхід в систему";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Вхід в систему</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="All" class="validation-summary"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Name" class="form-label"></label>
+                        <input asp-for="Input.Name" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Input.Name" class="validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Pwd" class="form-label"></label>
+                        <input asp-for="Input.Pwd" class="form-control" type="password" autocomplete="current-password" />
+                        <span asp-validation-for="Input.Pwd" class="validation-error"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Увійти</button>
+                        <a asp-page="/Account/Register" class="btn btn-link">Реєстрація</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

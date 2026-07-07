@@ -1,0 +1,47 @@
+@page
+@model GuestBook.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Реєстрація";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Реєстрація</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Name" class="form-label">Логін</label>
+                        <input asp-for="Input.Name" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Input.Name" class="validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Pwd" class="form-label">Пароль</label>
+                        <input asp-for="Input.Pwd" class="form-control" type="password" autocomplete="new-password" />
+                        <span asp-validation-for="Input.Pwd" class="validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.PwdConfirm" class="form-label">Підтвердження пароля</label>
+                        <input asp-for="Input.PwdConfirm" class="form-control" type="password" autocomplete="new-password" />
+                        <span asp-validation-for="Input.PwdConfirm" class="validation-error"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary">Зареєструватись</button>
+                        <a asp-page="/Account/Login" class="btn btn-link">Вже маю акаунт</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
