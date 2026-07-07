@@ -1,30 +1,42 @@
 @{
-    ViewBag.Title = "Вхід";
-}
-<h2>Вхід в систему</h2>
-
-@if (ViewBag.Error != null)
-{
-    <p style="color:red">@ViewBag.Error</p>
+    ViewData["Title"] = "Вхід";
 }
 
-<form method="post">
-    @Html.AntiForgeryToken()
-    <table>
-        <tr>
-            <td>Логін:</td>
-            <td><input type="text" name="Name" /></td>
-        </tr>
-        <tr>
-            <td>Пароль:</td>
-            <td><input type="password" name="Pwd" /></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button type="submit">Увійти</button>
-                <a href="/Account/Register">Реєстрація</a>
-                <a href="/Account/Guest">Увійти як гість</a>
-            </td>
-        </tr>
-    </table>
-</form>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-4 text-center">Вхід в систему</h4>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger py-2">@ViewBag.Error</div>
+                }
+
+                <form method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label" for="Name">Логін</label>
+                        <input type="text" id="Name" name="Name" class="form-control" placeholder="Введіть логін" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" for="Pwd">Пароль</label>
+                        <input type="password" id="Pwd" name="Pwd" class="form-control" placeholder="Введіть пароль" />
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-dark">Увійти</button>
+                    </div>
+
+                    <div class="text-center small">
+                        Немає акаунта? <a asp-controller="Account" asp-action="Register">Зареєструватись</a>
+                        &nbsp;|&nbsp;
+                        <a asp-controller="Account" asp-action="Guest">Увійти як гість</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

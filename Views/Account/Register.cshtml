@@ -1,41 +1,48 @@
 @model GuestBook.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Реєстрація";
+    ViewData["Title"] = "Реєстрація";
 }
-<h2>Реєстрація</h2>
 
-<form method="post">
-    @Html.AntiForgeryToken()
-    <table>
-        <tr>
-            <td>Логін:</td>
-            <td>@Html.TextBoxFor(m => m.Name)</td>
-            <td>
-                @Html.ValidationMessageFor(m => m.Name,
-                         "", new { style = "color:red" })
-            </td>
-        </tr>
-        <tr>
-            <td>Пароль:</td>
-            <td>@Html.PasswordFor(m => m.Pwd)</td>
-            <td>
-                @Html.ValidationMessageFor(m => m.Pwd,
-                         "", new { style = "color:red" })
-            </td>
-        </tr>
-        <tr>
-            <td>Підтвердження:</td>
-            <td>@Html.PasswordFor(m => m.PwdConfirm)</td>
-            <td>
-                @Html.ValidationMessageFor(m => m.PwdConfirm,
-                         "", new { style = "color:red" })
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <button type="submit">Зареєструватись</button>
-                <a href="/Account/Login">Вже маю акаунт</a>
-            </td>
-        </tr>
-    </table>
-</form>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-4 text-center">Реєстрація</h4>
+
+                <form method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Логін</label>
+                        <input asp-for="Name" class="form-control" placeholder="Введіть логін" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Pwd" class="form-label">Пароль</label>
+                        <input asp-for="Pwd" class="form-control" placeholder="Введіть пароль" />
+                        <span asp-validation-for="Pwd" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="PwdConfirm" class="form-label">Підтвердження пароля</label>
+                        <input asp-for="PwdConfirm" class="form-control" placeholder="Повторіть пароль" />
+                        <span asp-validation-for="PwdConfirm" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-dark">Зареєструватись</button>
+                    </div>
+
+                    <div class="text-center small">
+                        Вже є акаунт? <a asp-controller="Account" asp-action="Login">Увійти</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
